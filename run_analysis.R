@@ -28,18 +28,19 @@ TrainLabel<-read.table(TrainLabelDir)	#Activity code of training data
 TestLabel<-read.table(TestLabelDir)		#Activity code of test data
 Label<-read.table(LabelDir)			#Activity labels
 Activity<-rbind(TrainLabel,TestLabel)	#Merge activity code of training data and test data
-Activity<-Label[Activity[,1],2]			#Replace activity code with labels (activity names)
+Activities<-Label[Activity[,1],2]			#Replace activity code with labels (activity names)
 
 # 4. Appropriately label the data set with descriptive variable names.
 TrainSubj<-read.table(TrainSubjDir)		#Subject of taining dataset
 TestSubj<-read.table(TestSubjDir)		#Subject of test dataset
 Subject<-as.factor(c(TrainSubj[,1],TestSubj[,1]))	#Merge subject of training data and test data
 Subset$Subject<-Subject		#Attach subject to the sub dataset
-Subset$Activity<-as.factor(Activity[,1])	#Attach Activity to the sub dataset
+Subset$Activity<-Activities	#Attach Activity to the sub dataset
 
 
 # 5. Create an independent tidy dataset MeanSet with the average of each variable for each activity and each subject
 MeanSet<-aggregate(Subset[,1:(ncol(Subset)-2)],list(Subset$Activity,Subset$Subject),mean)
+names(MeanSet)<-c("ActivityName","SubjectID",names(MeanSet)[-c(1:2)])
 
 write.table(MeanSet,file="/Users/caipeng/Downloads/Coursera/3_Getting and Cleaning Data/W4/MeanSet.txt",row.name=FALSE)
 
